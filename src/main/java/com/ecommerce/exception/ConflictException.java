@@ -1,0 +1,24 @@
+package com.ecommerce.exception;
+
+import org.springframework.http.HttpStatus;
+
+public class ConflictException extends RuntimeException {
+
+    private final String errorCode;
+
+    public ConflictException(String message) {
+        super(message);
+        this.errorCode = "CONFLICT";
+    }
+
+    public ConflictException(String message, String errorCode) {
+        super(message);
+        this.errorCode = errorCode;
+    }
+
+    public String getErrorCode() { return errorCode; }
+
+    public HttpStatus getStatus() {
+        return HttpStatus.CONFLICT;
+    }
+}
