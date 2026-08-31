@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f4f4f4; }
+        .container { max-width: 600px; margin: 0 auto; background-color: #ffffff; }
+        .header { background-color: #17a2b8; color: #ffffff; padding: 20px; text-align: center; }
+        .content { padding: 30px; color: #333333; line-height: 1.6; }
+        .tracking-box { background-color: #f8f9fa; border: 1px solid #dee2e6; border-radius: 8px; padding: 20px; margin: 20px 0; text-align: center; }
+        .tracking-number { font-size: 20px; font-weight: bold; color: #007bff; }
+        .footer { background-color: #f4f4f4; padding: 20px; text-align: center; font-size: 12px; color: #999999; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>Your Order Has Been Shipped!</h1>
+    </div>
+    <div class="content">
+        <h2>Good news!</h2>
+        <p>Your order <strong th:text="${orderNumber}">ORD-001</strong> has been shipped and is on its way to you.</p>
+
+        <div class="tracking-box">
+            <p>Tracking Number:</p>
+            <p class="tracking-number" th:text="${trackingNumber}">TRACK-001</p>
+        </div>
+
+        <p>You can track your package using the tracking number above on the carrier's website.</p>
+        <p>Estimated delivery: 3-5 business days</p>
+    </div>
+    <div class="footer">
+        <p>&copy; 2024 E-Commerce. All rights reserved.</p>
+    </div>
+</div>
+</body>
+</html>
