@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" layout:decorate="~{store/layout}">
+<head>
+    <title th:text="'Home'">Home</title>
+</head>
+<body>
+<main layout:fragment="content" class="store-main">
+    <section class="hero-banner">
+        <div class="container">
+            <h1>Welcome to Our Store</h1>
+            <p>Discover amazing products at great prices</p>
+            <a th:href="@{/products}" class="btn btn-primary">Shop Now</a>
+        </div>
+    </section>
+
+    <section class="featured-categories" th:if="${featuredCategories != null and !featuredCategories.isEmpty()}">
+        <div class="container">
+            <h2>Shop by Category</h2>
+            <div class="category-grid">
+                <div class="category-card" th:each="category : ${featuredCategories}">
+                    <a th:href="@{/categories/{slug}(slug=${category.slug})}">
+                        <img th:if="${category.imageUrl != null}" th:src="${category.imageUrl}" th:alt="${category.name}">
+                        <h3 th:text="${category.name}">Category</h3>
+                        <p th:text="${category.description}">Description</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="featured-products" th:if="${featuredProducts != null and !featuredProducts.isEmpty()}">
+        <div class="container">
+            <h2>Featured Products</h2>
+            <div class="product-grid">
+                <div class="product-card" th:each="product : ${featuredProducts}">
+                    <a th:href="@{/products/{slug}(slug=${product.slug})}">
+                        <div class="product-image">
+                            <img th:if="${product.mainImageUrl != null}" th:src="${product.mainImageUrl}" th:alt="${product.name}">
+                        </div>
+                        <div class="product-info">
+                            <h3 th:text="${product.name}">Product Name</h3>
+                            <div class="product-rating" th:if="${product.averageRating != null}">
+                                <span class="stars" th:text="'★'.repeat(${product.averageRating.intValue()})"></span>
+                                <span th:text="'(' + ${product.reviewCount} + ')'">(0)</span>
+                            </div>
+                            <div class="product-price">
+                                <span class="current-price" th:text="'$' + ${product.price}">$0</span>
+                                <span class="original-price" th:if="${product.compareAtPrice != null and product.compareAtPrice > product.price}"
+                                      th:text="'$' + ${product.compareAtPrice}">$0</span>
+                            </div>
+                        </div>
+                    </a>
+                    <button class="btn btn-add-to-cart" th:data-product-id="${product.id}">Add to Cart</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="deals-section" th:if="${activePromotions != null and !activePromotions.isEmpty()}">
+        <div class="container">
+            <h2>Special Deals</h2>
+            <div class="deals-grid">
+                <div class="deal-card" th:each="promo : ${activePromotions}">
+                    <a th:href="@{/promotions/{slug}(slug=${promo.slug})}">
+                        <img th:if="${promo.bannerUrl != null}" th:src="${promo.bannerUrl}" th:alt="${promo.name}">
+                        <div class="deal-info">
+                            <h3 th:text="${promo.name}">Promotion</h3>
+                            <p th:text="${promo.description}">Description</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="newsletter-section">
+        <div class="container">
+            <h2>Subscribe to Our Newsletter</h2>
+            <p>Get the latest deals and updates delivered to your inbox</p>
+            <form th:action="@{/newsletter/subscribe}" method="post" class="newsletter-form">
+                <input type="email" name="email" placeholder="Enter your email" required>
+                <button type="submit" class="btn btn-primary">Subscribe</button>
+            </form>
+        </div>
+    </section>
+</main>
+</body>
+</html>
