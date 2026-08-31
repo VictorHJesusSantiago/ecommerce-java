@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${pageTitle} ?: 'Store'">Store</title>
+    <link rel="stylesheet" th:href="@{/css/store.css}">
+</head>
+<body>
+<header class="store-header">
+    <div class="container">
+        <div class="header-left">
+            <a th:href="@{/}" class="logo">E-Commerce</a>
+        </div>
+        <nav class="header-nav">
+            <ul>
+                <li><a th:href="@{/products}">Products</a></li>
+                <li><a th:href="@{/categories}">Categories</a></li>
+                <li><a th:href="@{/brands}">Brands</a></li>
+                <li><a th:href="@{/deals}">Deals</a></li>
+            </ul>
+        </nav>
+        <div class="header-right">
+            <div class="search-bar">
+                <form th:action="@{/search}" method="get">
+                    <input type="text" name="query" placeholder="Search products...">
+                    <button type="submit">Search</button>
+                </form>
+            </div>
+            <div class="header-actions">
+                <a th:href="@{/wishlist}" class="icon-link">
+                    <span class="icon">&#9825;</span>
+                    <span th:if="${wishlistCount != null and wishlistCount > 0}" class="badge" th:text="${wishlistCount}"></span>
+                </a>
+                <a th:href="@{/cart}" class="icon-link">
+                    <span class="icon">&#128722;</span>
+                    <span th:if="${cartItemCount != null and cartItemCount > 0}" class="badge" th:text="${cartItemCount}"></span>
+                </a>
+                <div class="user-menu" th:if="${user != null}">
+                    <span th:text="${user.firstName}">User</span>
+                    <ul class="dropdown">
+                        <li><a th:href="@{/account}">My Account</a></li>
+                        <li><a th:href="@{/orders}">My Orders</a></li>
+                        <li><a th:href="@{/logout}">Logout</a></li>
+                    </ul>
+                </div>
+                <a th:href="@{/login}" th:if="${user == null}">Login</a>
+            </div>
+        </div>
+    </div>
+</header>
+<main class="store-main" layout:fragment="content">
+</main>
+<footer class="store-footer">
+    <div class="container">
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h3>Shop</h3>
+                <ul>
+                    <li><a th:href="@{/products}">All Products</a></li>
+                    <li><a th:href="@{/categories}">Categories</a></li>
+                    <li><a th:href="@{/brands}">Brands</a></li>
+                    <li><a th:href="@{/deals}">Deals</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Account</h3>
+                <ul>
+                    <li><a th:href="@{/login}">Login</a></li>
+                    <li><a th:href="@{/register}">Register</a></li>
+                    <li><a th:href="@{/account}">My Account</a></li>
+                    <li><a th:href="@{/orders}">Order History</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Help</h3>
+                <ul>
+                    <li><a th:href="@{/help}">Help Center</a></li>
+                    <li><a th:href="@{/contact}">Contact Us</a></li>
+                    <li><a th:href="@{/faq}">FAQ</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Legal</h3>
+                <ul>
+                    <li><a th:href="@{/privacy}">Privacy Policy</a></li>
+                    <li><a th:href="@{/terms}">Terms of Service</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 E-Commerce. All rights reserved.</p>
+        </div>
+    </div>
+</footer>
+<script th:src="@{/js/store.js}"></script>
+</body>
+</html>

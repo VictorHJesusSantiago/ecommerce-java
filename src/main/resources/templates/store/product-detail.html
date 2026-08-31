@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" layout:decorate="~{store/layout}">
+<head>
+    <title th:text="${product.name} ?: 'Product'">Product Detail</title>
+    <link rel="stylesheet" th:href="@{/css/product.css}">
+</head>
+<body>
+<main layout:fragment="content" class="store-main">
+    <div class="container">
+        <nav class="breadcrumb">
+            <a th:href="@{/}">Home</a>
+            <span>/</span>
+            <a th:href="@{/products}">Products</a>
+            <span>/</span>
+            <span th:text="${product.name}">Product</span>
+        </nav>
+
+        <div class="product-detail" th:if="${product != null}">
+            <div class="product-gallery">
+                <div class="main-image">
+                    <img th:if="${product.mainImageUrl != null}" th:src="${product.mainImageUrl}" th:alt="${product.name}" id="mainProductImage">
+                </div>
+                <div class="thumbnail-list" th:if="${product.images != null}">
+                    <img th:each="image : ${product.images}" th:src="${image.thumbnailUrl}" th:alt="${image.altText}"
+                         class="thumbnail" th:data-full-url="${image.url}" onclick="changeImage(this)">
+                </div>
+            </div>
+
+            <div class="product-info">
+                <h1 th:text="${product.name}">Product Name</h1>
+                <div class="product-meta">
+                    <span class="sku" th:text="'SKU: ' + ${product.sku}">SKU</span>
+                    <span class="brand" th:if="${product.brand != null}" th:text="'Brand: ' + ${product.brand.name}">Brand</span>
+                </div>
+
+                <div class="product-rating" th:if="${product.averageRating != null}">
+                    <span class="stars" th:text="'★'.repeat(${product.averageRating.intValue()})"></span>
+                    <span class="rating-value" th:text="${product.averageRating}">0</span>
+                    <span class="review-count" th:text="'(' + ${product.reviewCount} + ' reviews)'">(0 reviews)</span>
+                </div>
+
+                <div class="product-price">
+                    <span class="current-price" th:text="'$' + ${product.price}">$0</span>
+                    <span class="original-price" th:if="${product.compareAtPrice != null and product.compareAtPrice > product.price}"
+                          th:text="'$' + ${product.compareAtPrice}">$0</span>
+                    <span class="discount-badge" th:if="${product.discountPercentage != null and product.discountPercentage > 0}"
+                          th:text="'-' + ${product.discountPercentage} + '%'">-0%</span>
+                </div>
+
+                <div class="product-description" th:if="${product.shortDescription != null}">
+                    <p th:text="${product.shortDescription}">Description</p>
+                </div>
+
+                <div class="product-stock">
+                    <span class="in-stock" th:if="${product.inStock}">In Stock</span>
+                    <span class="out-of-stock" th:unless="${product.inStock}">Out of Stock</span>
+                </div>
+
+                <div class="product-variants" th:if="${product.variants != null and !product.variants.isEmpty()}">
+                    <h3>Variants</h3>
+                    <div class="variant-options">
+                        <button th:each="variant : ${product.variants}" class="variant-option"
+                                th:data-variant-id="${variant.id}" th:text="${variant.name}"
+                                th:classappend="${variant.inStock} ? '' : 'disabled'"></button>
+                    </div>
+                </div>
+
+                <div class="product-quantity">
+                    <label>Quantity:</label>
+                    <div class="quantity-selector">
+                        <button type="button" class="qty-btn minus" onclick="changeQuantity(-1)">-</button>
+                        <input type="number" id="quantity" value="1" min="1" max="10">
+                        <button type="button" class="qty-btn plus" onclick="changeQuantity(1)">+</button>
+                    </div>
+                </div>
+
+                <div class="product-actions">
+                    <button class="btn btn-primary btn-lg add-to-cart" th:data-product-id="${product.id}"
+                            th:unless="${!product.inStock}">Add to Cart</button>
+                    <button class="btn btn-outline btn-lg add-to-wishlist" th:data-product-id="${product.id}">Add to Wishlist</button>
+                </div>
+
+                <div class="product-features" th:if="${product.metaDescription != null}">
+                    <h3>Features</h3>
+                    <div th:utext="${product.metaDescription}"></div>
+                </div>
+            </div>
+        </div>
+
+        <section class="product-tabs">
+            <div class="tab-headers">
+                <button class="tab-btn active" onclick="showTab('description')">Description</button>
+                <button class="tab-btn" onclick="showTab('reviews')">Reviews (<span th:text="${product.reviewCount} ?: '0'">0</span>)</button>
+                <button class="tab-btn" onclick="showTab('shipping')">Shipping</button>
+            </div>
+            <div class="tab-content" id="description-tab">
+                <div th:utext="${product.description}"></div>
+            </div>
+            <div class="tab-content" id="reviews-tab" style="display:none;">
+                <div class="reviews-list" th:if="${reviews != null}">
+                    <div class="review-item" th:each="review : ${reviews}">
+                        <div class="review-header">
+                            <span class="reviewer" th:text="${review.user.firstName}">User</span>
+                            <span class="review-rating" th:text="'★'.repeat(${review.rating})"></span>
+                            <span class="review-date" th:text="${#temporals.format(review.createdAt, 'MMM dd, yyyy')}">Date</span>
+                        </div>
+                        <h4 th:text="${review.title}">Title</h4>
+                        <p th:text="${review.comment}">Comment</p>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-content" id="shipping-tab" style="display:none;">
+                <p>Free shipping on orders over $50. Standard delivery 3-5 business days.</p>
+            </div>
+        </section>
+
+        <section class="related-products" th:if="${relatedProducts != null and !relatedProducts.isEmpty()}">
+            <h2>Related Products</h2>
+            <div class="product-grid">
+                <div class="product-card" th:each="related : ${relatedProducts}">
+                    <a th:href="@{/products/{slug}(slug=${related.slug})}">
+                        <div class="product-image">
+                            <img th:if="${related.mainImageUrl != null}" th:src="${related.mainImageUrl}" th:alt="${related.name}">
+                        </div>
+                        <div class="product-info">
+                            <h3 th:text="${related.name}">Product</h3>
+                            <span class="price" th:text="'$' + ${related.price}">$0</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </section>
+    </div>
+</main>
+<script th:src="@{/js/product.js}"></script>
+</body>
+</html>
