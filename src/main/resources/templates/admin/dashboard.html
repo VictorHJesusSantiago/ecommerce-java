@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${pageTitle} ?: 'Admin Dashboard'">Admin Dashboard</title>
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
+</head>
+<body>
+<div class="admin-layout">
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <h2>E-Commerce Admin</h2>
+        </div>
+        <nav class="sidebar-nav">
+            <ul>
+                <li><a th:href="@{/admin/dashboard}">Dashboard</a></li>
+                <li><a th:href="@{/admin/products}">Products</a></li>
+                <li><a th:href="@{/admin/orders}">Orders</a></li>
+                <li><a th:href="@{/admin/customers}">Customers</a></li>
+                <li><a th:href="@{/admin/inventory}">Inventory</a></li>
+                <li><a th:href="@{/admin/marketing}">Marketing</a></li>
+                <li><a th:href="@{/admin/cms}">CMS</a></li>
+                <li><a th:href="@{/admin/reports}">Reports</a></li>
+                <li><a th:href="@{/admin/settings}">Settings</a></li>
+            </ul>
+        </nav>
+    </aside>
+    <main class="main-content" layout:fragment="content">
+        <div class="dashboard-stats">
+            <div class="stat-card">
+                <h3 th:text="${totalOrders} ?: '0'">0</h3>
+                <p>Total Orders</p>
+            </div>
+            <div class="stat-card">
+                <h3 th:text="${totalRevenue} ?: '$0'">$0</h3>
+                <p>Revenue</p>
+            </div>
+            <div class="stat-card">
+                <h3 th:text="${totalCustomers} ?: '0'">0</h3>
+                <p>Customers</p>
+            </div>
+            <div class="stat-card">
+                <h3 th:text="${totalProducts} ?: '0'">0</h3>
+                <p>Products</p>
+            </div>
+        </div>
+    </main>
+</div>
+<script th:src="@{/js/admin.js}"></script>
+</body>
+</html>
